@@ -10,7 +10,7 @@ public class playerMovement : MonoBehaviour
     public float speed;
     Rigidbody2D rb;
     private Direction movingDir = Direction.None;
-    bool movingHorizontally;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +23,6 @@ public class playerMovement : MonoBehaviour
 
         if(movingDir == Direction.None){
         if(Input.GetAxisRaw("Horizontal")!=0){
-            //rb.constraints = RigidbodyConstraints2D.FreezePositionY;
 
             if(Input.GetAxisRaw("Horizontal") > 0){
                 movingDir = Direction.East;
@@ -33,7 +32,7 @@ public class playerMovement : MonoBehaviour
             }
         }
         else if(Input.GetAxisRaw("Vertical") != 0){
-            //rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+
             if(Input.GetAxisRaw("Vertical") > 0){
                 movingDir = Direction.North;
             }
