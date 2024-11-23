@@ -68,8 +68,11 @@ public class playerMovement : MonoBehaviour
 
      void OnCollisionEnter2D(Collision2D collision)
     {
-        // Stop movement upon collision
-        rb.velocity = Vector2.zero;
-        movingDir = Direction.None; // Reset direction to allow new input
+        // Reset movement only if the player hits something other than the cat
+        if (!collision.gameObject.CompareTag("Cat"))
+        {
+            rb.velocity = Vector2.zero;
+            movingDir = Direction.None; // Reset direction to allow new input
+        }
     }
 }
