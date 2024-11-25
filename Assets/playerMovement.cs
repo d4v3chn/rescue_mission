@@ -8,7 +8,7 @@ public class playerMovement : MonoBehaviour
         North, South,East, West, None
     }
     public float speed;
-    Rigidbody2D rb;
+    public Rigidbody2D rb; //rigidbody changed to public
     private Direction movingDir = Direction.None;
 
     // Start is called before the first frame update
