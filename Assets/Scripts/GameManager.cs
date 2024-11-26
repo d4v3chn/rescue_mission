@@ -1,13 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public Gawe gawe;
-    public Dragon[] dragons;
-    public Text scoreText;
-    public Text livesText;
-    public Text gameOverText;
+    //public Dragon[] dragons;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI livesText;
+    public TextMeshProUGUI gameOverText;
 
     public int score;
     public int lives;
@@ -15,9 +16,9 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
 
-        scoreText = GameObject.Find("ScoreText")?.GetComponent<Text>();
-        livesText = GameObject.Find("LivesText")?.GetComponent<Text>();
-        gameOverText = GameObject.Find("GameOverText")?.GetComponent<Text>();
+        scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
+        livesText = GameObject.Find("LivesText")?.GetComponent<TextMeshProUGUI>();
+        gameOverText = GameObject.Find("GameOverText")?.GetComponent<TextMeshProUGUI>();
 
 
         if (scoreText == null || livesText == null || gameOverText == null)
@@ -52,11 +53,11 @@ public class GameManager : MonoBehaviour
         gawe.ResetState();
 
 
-        foreach (var dragon in dragons)
+        /*foreach (var dragon in dragons)
         {
             dragon.transform.position = GetRandomPosition();
             dragon.enabled = true;
-        }
+        }*/
     }
 
     public void Death()
@@ -84,10 +85,10 @@ public class GameManager : MonoBehaviour
     private void StopGameplay()
     {
         gawe.enabled = false;
-        foreach (var dragon in dragons)
+        /*foreach (var dragon in dragons)
         {
             dragon.enabled = false;
-        }
+        }*/
     }
 
     private void SetScore(int newScore)
