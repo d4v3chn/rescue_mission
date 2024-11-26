@@ -1,31 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManagerScript : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public Gawe gawe;
     public Dragon[] dragons;
-    //public Cat cat; // <- after we implement the cat
     public Text scoreText;
     public Text livesText;
     public Text gameOverText;
 
-
     public int score;
     public int lives;
 
-
-    void Start()
+    private void Awake()
     {
+
+        scoreText = GameObject.Find("ScoreText")?.GetComponent<Text>();
+        livesText = GameObject.Find("LivesText")?.GetComponent<Text>();
+        gameOverText = GameObject.Find("GameOverText")?.GetComponent<Text>();
+
+
+        if (scoreText == null || livesText == null || gameOverText == null)
+        {
+            Debug.LogError("GameManager is missing required UI elements. Please ensure they are properly set up in the scene.");
+            enabled = false;
+            return;
+        }
+
         NewGame();
     }
 
     private void Update()
     {
-        // press R to restart the game
         if (lives <= 0 && Input.GetKeyDown(KeyCode.R))
         {
             NewGame();
@@ -36,68 +42,24 @@ public class GameManagerScript : MonoBehaviour
     {
         SetScore(0);
         SetLives(3);
-
-
-        ResetEntities(); // to reset the positions of every entities on the map
-
+        ResetEntities();
         gameOverText.gameObject.SetActive(false);
-    }
-
-    
-
-    private void NewRound()
-    {
-        SetScore(score + 1);
-    }
-
-    private void GameOver()
-    {
-        gameOverText.text = $"Game Over! Your Score: {score}\nPress 'R' to restart.";
-        gameOverText.gameObject.SetActive(true);
-
-        StopGameplay();
-
-    }
-
-    private void StopGameplay()
-    {
-        // disables all movement
-        gawe.enabled = false;
-        foreach (var dragon in dragons)
-        {
-            dragon.enabled = false;
-        }
-        //cat.enabled = false; // <- after we implement the cat
     }
 
     private void ResetEntities()
     {
 
-        // needs a further implementation for the entities to spawn to random locations. for that first implement entities' logic
+        gawe.ResetState();
 
-        gawe.transform.position = new Vector2(0,0);
-        gawe.enabled = true;
 
-        foreach (var dragon in dragons) {
-            dragon.transform.position = new Vector2(0, 0);
+        foreach (var dragon in dragons)
+        {
+            dragon.transform.position = GetRandomPosition();
             dragon.enabled = true;
         }
-
-        /*cat.transform.position = new Vector2(0, 0);
-        cat.enabled = true;*/ // <- after we implement the cat
     }
 
-    /*public void CatchCat()
-    {
-
-        SetScore(score + 1);
-        cat.ResetCat(); // <- after we implement the cat
-    }*/
-
-
-
-
-    private void Death()
+    public void Death()
     {
         SetLives(lives - 1);
 
@@ -111,22 +73,38 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-
-    private void SetScore(int score)
+    private void GameOver()
     {
-        this.score = score;
-        scoreText.text = $"Score: {this.score}";
+        gameOverText.text = $"Game Over! Your Score: {score}\nPress 'R' to restart.";
+        gameOverText.gameObject.SetActive(true);
+
+        StopGameplay();
     }
 
-    private void SetLives(int lives)
+    private void StopGameplay()
     {
-        this.lives = lives;
-        livesText.text = $"Lives: {this.lives}";
+        gawe.enabled = false;
+        foreach (var dragon in dragons)
+        {
+            dragon.enabled = false;
+        }
     }
 
+    private void SetScore(int newScore)
+    {
+        score = newScore;
+        scoreText.text = $"Score: {score}";
+    }
 
+    private void SetLives(int newLives)
+    {
+        lives = newLives;
+        livesText.text = $"Lives: {lives}";
+    }
 
-
-
-
+    private Vector2 GetRandomPosition()
+    {
+        
+        return new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+    }
 }

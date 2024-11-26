@@ -1,88 +1,117 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gawe : MonoBehaviour
 {
-    enum Direction
+    public float speed = 8.0f;
+    public float speedMultiplier = 1.0f;
+
+    public LayerMask obstacleLayer;
+    public LayerMask checkpointLayer;
+
+    private new Rigidbody2D rigidbody;
+    private Vector2 direction;
+    private Vector2 nextDirection;
+    private Vector3 startingPosition;
+    private Vector3 currentCheckpoint;
+    private bool isAtCheckpoint = false;
+
+    private void Awake()
     {
-        North, South, East, West, None
+        rigidbody = GetComponent<Rigidbody2D>();
+        startingPosition = transform.position;
+        currentCheckpoint = startingPosition;
     }
-    public float speed;
-    Rigidbody2D rb;
-    private Direction movingDir = Direction.None;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        ResetState();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        HandleInput();
 
-        if (movingDir == Direction.None)
+        Collider2D checkpointCollider = Physics2D.OverlapBox(transform.position, Vector2.one * 0.475f, 0f, checkpointLayer);
+        isAtCheckpoint = checkpointCollider != null;
+
+        if (isAtCheckpoint)
         {
-            if (Input.GetAxisRaw("Horizontal") != 0)
-            {
+            currentCheckpoint = checkpointCollider.transform.position;
+        }
 
-                if (Input.GetAxisRaw("Horizontal") > 0)
-                {
-                    movingDir = Direction.East;
-                }
-                else if (Input.GetAxisRaw("Horizontal") < 0)
-                {
-                    movingDir = Direction.West;
-                }
-            }
-            else if (Input.GetAxisRaw("Vertical") != 0)
-            {
-
-                if (Input.GetAxisRaw("Vertical") > 0)
-                {
-                    movingDir = Direction.North;
-                }
-                else if (Input.GetAxisRaw("Vertical") < 0)
-                {
-                    movingDir = Direction.South;
-                }
-            }
+        if (nextDirection != Vector2.zero)
+        {
+            SetDirection(nextDirection);
+        }
+        else if (Vector2.Distance(transform.position, currentCheckpoint) < 0.1f)
+        {
+            FindNextCheckpoint();
         }
     }
 
-    void FixedUpdate()
+    private void FindNextCheckpoint()
     {
-        switch (movingDir)
+        Collider2D[] checkpoints = Physics2D.OverlapBoxAll(transform.position, Vector2.one * 1.5f, 0f, checkpointLayer);
+        if (checkpoints.Length > 0)
         {
-            case Direction.North:
-                rb.velocity = new Vector2(0, speed * Time.fixedDeltaTime);
-                break;
-            case Direction.South:
-                rb.velocity = new Vector2(0, -speed * Time.fixedDeltaTime);
-                break;
-            case Direction.East:
-                rb.velocity = new Vector2(speed * Time.fixedDeltaTime, 0);
-                break;
-            case Direction.West:
-                rb.velocity = new Vector2(-speed * Time.fixedDeltaTime, 0);
-                break;
-            case Direction.None:
-                rb.velocity = Vector2.zero; // Stop if no direction is set
-                break;
+            currentCheckpoint = checkpoints[0].transform.position;
+            SetDirection((currentCheckpoint - (Vector3)transform.position).normalized);
         }
     }
 
-
-
-
-    /*void OnCollisionEnter2D(Collision2D collision)
+    private void HandleInput()
     {
-        // Reset movement only if the player hits something other than the cat
-        if (!collision.gameObject.CompareTag("Cat"))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            rb.velocity = Vector2.zero;
-            movingDir = Direction.None; // Reset direction to allow new input
+            SetDirection(Vector2.up);
         }
-    }*/
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            SetDirection(Vector2.down);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            SetDirection(Vector2.right);
+        }
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            SetDirection(Vector2.left);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Vector2 position = rigidbody.position;
+        Vector2 translation = direction * speed * speedMultiplier * Time.fixedDeltaTime;
+        rigidbody.MovePosition(position + translation);
+    }
+
+    public void ResetState()
+    {
+        speedMultiplier = 1.0f;
+        direction = Vector2.zero;
+        nextDirection = Vector2.zero;
+        transform.position = currentCheckpoint;
+        rigidbody.isKinematic = false;
+        enabled = true;
+    }
+
+    public void SetDirection(Vector2 newDirection)
+    {
+        if (!Occupied(newDirection))
+        {
+            direction = newDirection;
+            nextDirection = Vector2.zero;
+        }
+        else
+        {
+            nextDirection = newDirection;
+        }
+    }
+
+    public bool Occupied(Vector2 direction)
+    {
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, Vector2.one * 0.475f, 0.0f, direction, 1.5f, obstacleLayer);
+        return hit.collider != null;
+    }
 }
