@@ -3860,7 +3860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalSpeed: 5
-  tunnelSpeed: 3
+  tunnelSpeed: 2
   rb: {fileID: 950608108}
 --- !u!50 &950608108
 Rigidbody2D:
