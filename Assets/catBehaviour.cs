@@ -1,129 +1,112 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI; // For NavMesh functionality
 
-public class catBehaviour : MonoBehaviour
+public class CatBehaviour : MonoBehaviour
 {
-       public float speed = 5f;  // Movement speed of the ghost
-    public float detectionRange = 5f;  // Range within which the ghost tries to avoid the player
-    public LayerMask wallLayer;  // Layer assigned to walls in the maze
+    /*To randomly select a startpoint*/
+    private float gridSizeX = 1f; // Width of a grid square
+    private float gridSizeY = 1f; // Height of a grid square
+    private int gridWidth = 22; // Width of the grid (22 squares)
+    private int gridHeight = 22; // Height of the grid (22 squares)
+   
+    /*The agent = the cat*/
+    NavMeshAgent agent;
 
-    private Rigidbody2D rb;
-    private Vector2 currentDirection;
-    private Transform player;  // Reference to the player
-    private Vector2[] directions = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };  // Possible movement directions
-    private bool isAvoidingPlayer = false;  // Track if ghost is actively avoiding the player
+    /*The chaser = the player*/
+    [SerializeField] Transform chaser; // Player transform
+    [SerializeField] float runDistance = 5f; // Distance to move away from the player
+    [SerializeField] float safeDistance = 10f; // Distance at which the cat switches to patrol mode
+    //[SerializeField] private float moveSpeed = 5f;
+    //[SerializeField] private Transform movePoint;
+    //[SerializeField] List<Transform> patrolPoints; // Points for patrolling
+    //private int currentPatrolIndex = 0;
+
+    private float patrolTime = 0.5f; // Time to move in one direction
+    private float timeInCurrentDirection = 0f; // Timer for how long we've been moving in the current direction
+    private Vector3 lastDirection; // The direction the cat is moving in (for reversal)
+
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;  // Assume the player has a tag "Player"
-        PickRandomDirection();  // Start with a random direction
+        // Start at a random position
+        SetRandomStartPosition();
+        //movePoint.parent = null;
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false; // Prevent rotation for 2D
+        agent.updateUpAxis = false;   // Align with 2D plane
+
+
+        // Initial direction for patrol (we can start in any direction)
+        lastDirection = transform.right; // Initially move to the right
     }
 
-    void Update()
+    private void Update()
     {
-        // Check if the ghost should avoid the player
-        if (Vector2.Distance(transform.position, player.position) <= detectionRange)
+        if (agent.isOnNavMesh && chaser != null)
         {
-            isAvoidingPlayer = true;
-            AvoidPlayer();
-        }
-        else
-        {
-            isAvoidingPlayer = false;
-        }
+            float distanceToPlayer = Vector3.Distance(transform.position, chaser.position);
 
-        // Ensure the ghost keeps moving if it stops or has no valid direction
-        if (currentDirection == Vector2.zero || IsWallAhead())
-        {
-            PickRandomDirection();
-        }
-    }
-
-    void FixedUpdate()
-    {
-        // Always move the ghost in the current direction
-        rb.velocity = currentDirection.normalized * speed * Time.fixedDeltaTime;
-    }
-
-    // Picks a random valid direction for the ghost to move
-    private void PickRandomDirection()
-    {
-        List<Vector2> validDirections = new List<Vector2>();
-
-        foreach (var dir in directions)
-        {
-            if (!IsWallInDirection(dir))
+            if (distanceToPlayer <= safeDistance)
             {
-                validDirections.Add(dir);
+                // Move away from the player
+                Vector3 awayDirection = (transform.position - chaser.position).normalized;
+                Vector3 runToPosition = transform.position + awayDirection * runDistance;
+                runToPosition.z = transform.position.z; // Ensure movement is 2D
+                agent.SetDestination(runToPosition);
+            }
+            else
+            {
+                Patrol(); // Start patrolling when player is far away
             }
         }
-
-        // Pick a random direction from the valid options
-        if (validDirections.Count > 0)
-        {
-            currentDirection = validDirections[Random.Range(0, validDirections.Count)];
-        }
-        else
-        {
-            // If no valid directions are found, reverse direction
-            currentDirection = -currentDirection; 
-        }
     }
 
-    // Checks if there's a wall ahead in the current direction
-    private bool IsWallAhead()
+
+    /*Things below this should woirk*/
+
+    /*Function to decide where the cat sould spawn*/
+     void SetRandomStartPosition()
     {
-        return IsWallInDirection(currentDirection);
-    }
+        Vector3 randomPosition = Vector3.zero;
+        bool validPosition = false;
 
-    // Checks for a wall in a specific direction using a raycast
-    private bool IsWallInDirection(Vector2 direction)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 1f, wallLayer);
-        return hit.collider != null;
-
-    }
-
-    // Logic to move the ghost away from the player
-    private void AvoidPlayer()
-    {
-        Vector2 avoidanceDirection = Vector2.zero;
-        float maxDistance = 0;
-
-        foreach (var dir in directions)
+        // Keep trying until a valid position is found
+        while (!validPosition)
         {
-            if (!IsWallInDirection(dir))
-            {
-                float distance = Vector2.Distance((Vector2)transform.position + dir, player.position);
+            // Randomly select a grid cell within the grid limits
+            float randomX = Random.Range(0, gridWidth);  // Random X coordinate (between 0 and gridWidth-1)
+            float randomY = Random.Range(0, gridHeight); // Random Y coordinate (between 0 and gridHeight-1)
 
-                if (distance > maxDistance)
-                {
-                    maxDistance = distance;
-                    avoidanceDirection = dir;
-                }
-            }
+            // Calculate the center of the random grid square (0.5 offset to center in the square)
+            randomPosition = new Vector3(randomX * gridSizeX + 0.5f, randomY * gridSizeY + 0.5f, 0f);
+
+            // Check if the chosen position is valid (not on a wall) using NavMesh
+            NavMeshHit hit;
+            validPosition = NavMesh.SamplePosition(randomPosition, out hit, 1.0f, NavMesh.AllAreas);
         }
 
-        // If an avoidance direction is found, use it; otherwise, pick a random direction
-        currentDirection = avoidanceDirection != Vector2.zero ? avoidanceDirection : currentDirection;
+        // Set the cat's position to the valid position
+        transform.position = randomPosition;
+    }
 
-        // Fallback to ensure movement
-        if (currentDirection == Vector2.zero)
+    private void Patrol()
+    {
+                // If we're moving in a direction, increment the timer
+        timeInCurrentDirection += Time.deltaTime;
+
+        // If we've been moving in this direction for the specified time, reverse direction
+        if (timeInCurrentDirection >= patrolTime)
         {
-            PickRandomDirection();
+            lastDirection = -lastDirection; // Reverse the patrol direction
+            timeInCurrentDirection = 0f; // Reset the timer
         }
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // If the ghost collides with something, pick a new random direction
-        PickRandomDirection();
 
-    if (collision.gameObject.CompareTag("Player"))
-    {
-        Destroy(gameObject); // Destroy the cat if caught by the player
-    }
-}
+        // Set the agent's destination to move in the current direction for the next patrolTime
+        agent.SetDestination(transform.position + lastDirection);
 
+        // Optionally, adjust speed or other properties for patrol
+        agent.speed = 0.5f; // Set a slow patrol speed
+    }
 }
