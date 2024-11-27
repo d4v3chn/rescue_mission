@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Checkpoint
+  - Tunnel
   layers:
   - Default
   - TransparentFX
@@ -43,6 +44,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: ObstacleLayer
+  - name: Wall
     uniqueID: 988123877
+    locked: 0
+  - name: Gawe
+    uniqueID: 2177566291
     locked: 0

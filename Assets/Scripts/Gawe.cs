@@ -2,116 +2,69 @@ using UnityEngine;
 
 public class Gawe : MonoBehaviour
 {
-    public float speed = 8.0f;
-    public float speedMultiplier = 1.0f;
+    public float normalSpeed = 5f;
+    public float tunnelSpeed = 2f;
 
-    public LayerMask obstacleLayer;
-    public LayerMask checkpointLayer;
+    private float currentSpeed;
+    public Rigidbody2D rb; 
 
-    private new Rigidbody2D rigidbody;
-    private Vector2 direction;
-    private Vector2 nextDirection;
-    private Vector3 startingPosition;
-    private Vector3 currentCheckpoint;
-    private bool isAtCheckpoint = false;
+    private Vector2 movement;
+    private bool isFacingRight = true;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-        startingPosition = transform.position;
-        currentCheckpoint = startingPosition;
+        currentSpeed = normalSpeed;
     }
 
-    private void Start()
+    void Update()
     {
-        ResetState();
-    }
 
-    private void Update()
-    {
-        HandleInput();
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
 
-        Collider2D checkpointCollider = Physics2D.OverlapBox(transform.position, Vector2.one * 0.475f, 0f, checkpointLayer);
-        isAtCheckpoint = checkpointCollider != null;
 
-        if (isAtCheckpoint)
+        if (movement.x < 0 && !isFacingRight)
         {
-            currentCheckpoint = checkpointCollider.transform.position;
+            Flip(); 
         }
-
-        if (nextDirection != Vector2.zero)
+        else if (movement.x > 0 && isFacingRight)
         {
-            SetDirection(nextDirection);
-        }
-        else if (Vector2.Distance(transform.position, currentCheckpoint) < 0.1f)
-        {
-            FindNextCheckpoint();
+            Flip(); 
         }
     }
 
-    private void FindNextCheckpoint()
+    void FixedUpdate()
     {
-        Collider2D[] checkpoints = Physics2D.OverlapBoxAll(transform.position, Vector2.one * 1.5f, 0f, checkpointLayer);
-        if (checkpoints.Length > 0)
+        rb.MovePosition(rb.position + movement * currentSpeed * Time.fixedDeltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Tunnel"))
         {
-            currentCheckpoint = checkpoints[0].transform.position;
-            SetDirection((currentCheckpoint - (Vector3)transform.position).normalized);
+            currentSpeed = tunnelSpeed;
+
+            Debug.Log("Gawe entered the tunnel, the speed reduced...");
         }
     }
 
-    private void HandleInput()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (collision.CompareTag("Tunnel"))
         {
-            SetDirection(Vector2.up);
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            SetDirection(Vector2.down);
-        }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            SetDirection(Vector2.right);
-        }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            SetDirection(Vector2.left);
+            currentSpeed = normalSpeed;
+
+            Debug.Log("Gawe exited the tunnel, the speed is back to normal!");
         }
     }
 
-    private void FixedUpdate()
+    private void Flip()
     {
-        Vector2 position = rigidbody.position;
-        Vector2 translation = direction * speed * speedMultiplier * Time.fixedDeltaTime;
-        rigidbody.MovePosition(position + translation);
-    }
 
-    public void ResetState()
-    {
-        speedMultiplier = 1.0f;
-        direction = Vector2.zero;
-        nextDirection = Vector2.zero;
-        transform.position = currentCheckpoint;
-        rigidbody.isKinematic = false;
-        enabled = true;
-    }
-
-    public void SetDirection(Vector2 newDirection)
-    {
-        if (!Occupied(newDirection))
-        {
-            direction = newDirection;
-            nextDirection = Vector2.zero;
-        }
-        else
-        {
-            nextDirection = newDirection;
-        }
-    }
-
-    public bool Occupied(Vector2 direction)
-    {
-        RaycastHit2D hit = Physics2D.BoxCast(transform.position, Vector2.one * 0.475f, 0.0f, direction, 1.5f, obstacleLayer);
-        return hit.collider != null;
+        isFacingRight = !isFacingRight;
+        
+        Vector3 scale = transform.localScale;
+        scale.x *= -1; 
+        transform.localScale = scale;
     }
 }
