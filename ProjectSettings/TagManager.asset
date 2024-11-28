@@ -3,19 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Cat
-  - Walls
-  - Junction
-  - Walk
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Walls
+  - 
   - Water
   - UI
-  - Walk
+  - 
   - 
   - 
   - 
