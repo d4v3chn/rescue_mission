@@ -5,6 +5,9 @@ using UnityEngine.AI; // For NavMesh functionality
 
 public class CatBehaviour : MonoBehaviour
 {
+    /* Cat AI States */
+    private enum CatState { Patrolling, RunningAway, Caught }
+    private CatState currentState;
     /*To randomly select a startpoint*/
     private float gridSizeX = 1f; // Width of a grid square
     private float gridSizeY = 1f; // Height of a grid square
@@ -23,9 +26,12 @@ public class CatBehaviour : MonoBehaviour
     //[SerializeField] List<Transform> patrolPoints; // Points for patrolling
     //private int currentPatrolIndex = 0;
 
+    /*Variables important for the patrol state */
     private float patrolTime = 0.5f; // Time to move in one direction
     private float timeInCurrentDirection = 0f; // Timer for how long we've been moving in the current direction
     private Vector3 lastDirection; // The direction the cat is moving in (for reversal)
+
+    private bool isCaught = false; // Track if the cat has been caught
 
 
     void Start()
@@ -37,6 +43,8 @@ public class CatBehaviour : MonoBehaviour
         agent.updateRotation = false; // Prevent rotation for 2D
         agent.updateUpAxis = false;   // Align with 2D plane
 
+        // Initial state
+        currentState = CatState.Patrolling;
 
         // Initial direction for patrol (we can start in any direction)
         lastDirection = transform.right; // Initially move to the right
@@ -44,23 +52,54 @@ public class CatBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (agent.isOnNavMesh && chaser != null)
-        {
-            float distanceToPlayer = Vector3.Distance(transform.position, chaser.position);
+        switch (currentState)
+                {
+                    case CatState.Patrolling:
+                        Patrol();
+                        CheckPlayerDistance();
+                        break;
 
-            if (distanceToPlayer <= safeDistance)
-            {
-                // Move away from the player
-                Vector3 awayDirection = (transform.position - chaser.position).normalized;
-                Vector3 runToPosition = transform.position + awayDirection * runDistance;
-                runToPosition.z = transform.position.z; // Ensure movement is 2D
-                agent.SetDestination(runToPosition);
-            }
-            else
-            {
-                Patrol(); // Start patrolling when player is far away
-            }
+                    case CatState.RunningAway:
+                        RunAwayFromPlayer();
+                        CheckPlayerDistance();
+                        break;
+
+                    case CatState.Caught:
+                        // No movement or behavior; the cat is "caught."
+                        break;
+                }
+    }
+
+    private void CheckPlayerDistance()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, chaser.position);
+
+        if (distanceToPlayer <= safeDistance)
+        {
+            currentState = CatState.RunningAway;
         }
+        else if (distanceToPlayer > safeDistance && currentState == CatState.RunningAway)
+        {
+            currentState = CatState.Patrolling;
+        }
+    }
+
+      // Trigger collision detection
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && currentState != CatState.Caught) // Check if the player caught the cat
+        {
+            currentState = CatState.Caught;
+            gameObject.SetActive(false); // Make the cat disappear
+        }
+    }
+
+    // Respawn the cat at a random location
+    public void Respawn()
+    {
+        currentState = CatState.Patrolling; // Reset to patrolling
+        SetRandomStartPosition(); // Randomly place the cat
+        gameObject.SetActive(true); // Make the cat visible again
     }
 
 
@@ -89,6 +128,14 @@ public class CatBehaviour : MonoBehaviour
 
         // Set the cat's position to the valid position
         transform.position = randomPosition;
+    }
+
+        private void RunAwayFromPlayer()
+    {
+        Vector3 awayDirection = (transform.position - chaser.position).normalized;
+        Vector3 runToPosition = transform.position + awayDirection * runDistance;
+        runToPosition.z = transform.position.z; // Ensure movement is 2D
+        agent.SetDestination(runToPosition);
     }
 
     private void Patrol()
