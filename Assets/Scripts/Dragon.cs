@@ -3,9 +3,9 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-    public Transform[] patrolPoints; // Array of patrol points for idle movement
-    public float chaseSpeed = 5f; // Speed when chasing Gawe
-    public float patrolSpeed = 2f; // Speed during patrol
+    public Transform[] patrolPoints;
+    public float chaseSpeed = 4f;
+    public float patrolSpeed = 2f;
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -21,7 +21,7 @@ public class Dragon : MonoBehaviour
             return;
         }
 
-        agent.speed = patrolSpeed; // Start with patrol speed
+        agent.speed = patrolSpeed;
         GotoNextPatrolPoint();
     }
 
@@ -29,7 +29,7 @@ public class Dragon : MonoBehaviour
     {
         if (!agent.isOnNavMesh)
         {
-            return; // Skip Update if the agent is not on the NavMesh
+            return;
         }
 
         if (isChasing)
@@ -47,7 +47,6 @@ public class Dragon : MonoBehaviour
         if (!agent.isOnNavMesh || agent.pathPending)
             return;
 
-        // If the dragon has reached its patrol point, go to the next one
         if (agent.remainingDistance < 0.5f)
         {
             GotoNextPatrolPoint();
@@ -59,7 +58,6 @@ public class Dragon : MonoBehaviour
         if (patrolPoints.Length == 0)
             return;
 
-        // Ensure patrol point is on NavMesh
         Transform target = patrolPoints[currentPatrolIndex];
         if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
         {
@@ -75,7 +73,6 @@ public class Dragon : MonoBehaviour
 
     private void ChaseGawe()
     {
-        // If chasing, move toward Gawe's position
         GameObject gawe = GameObject.FindGameObjectWithTag("Player");
         if (gawe != null && agent.isOnNavMesh)
         {
@@ -85,7 +82,6 @@ public class Dragon : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Start chasing Gawe if detected
         if (collision.CompareTag("Player"))
         {
             isChasing = true;
@@ -96,7 +92,6 @@ public class Dragon : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Stop chasing when Gawe is out of detection range
         if (collision.CompareTag("Player"))
         {
             isChasing = false;

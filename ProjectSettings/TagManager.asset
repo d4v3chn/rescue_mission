@@ -42,18 +42,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Dragon
-    uniqueID: 456929047
-    locked: 0
-  - name: Wall
-    uniqueID: 988123877
-    locked: 0
-  - name: Tunnel
-    uniqueID: 2990375193
-    locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Gawe
-    uniqueID: 2177566291
     locked: 0
