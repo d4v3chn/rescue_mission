@@ -5720,7 +5720,7 @@ TilemapCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525460155}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -5778,6 +5778,7 @@ GameObject:
   - component: {fileID: 720325490}
   - component: {fileID: 720325489}
   - component: {fileID: 720325493}
+  - component: {fileID: 720325494}
   m_Layer: 0
   m_Name: cat_walking_0
   m_TagString: Cat
@@ -5937,6 +5938,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8334c9a40c0e245849a6b626d52ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chaser: {fileID: 1192431847}
+  runDistance: 5
+  safeDistance: 10
+--- !u!195 &720325494
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720325487}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.1
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.00001
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &1086205248
 GameObject:
   m_ObjectHideFlags: 0
@@ -6122,6 +6148,7 @@ GameObject:
   - component: {fileID: 1192431846}
   - component: {fileID: 1192431845}
   - component: {fileID: 1192431844}
+  - component: {fileID: 1192431848}
   m_Layer: 0
   m_Name: Gawe
   m_TagString: Player
@@ -6269,6 +6296,20 @@ Transform:
   - {fileID: 382950477}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1192431848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192431842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c024bcb2c10f30848bd294108e2a961b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  rb: {fileID: 1192431845}
 --- !u!213 &1299247471
 Sprite:
   m_ObjectHideFlags: 0
