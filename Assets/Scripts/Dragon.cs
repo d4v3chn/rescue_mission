@@ -3,9 +3,10 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-    public Transform[] patrolPoints;
-    public float chaseSpeed = 4f;
-    public float patrolSpeed = 2f;
+    public Transform[] patrolPoints; // Array of patrol points for patrolling
+    public float chaseSpeed = 4f;    // Speed while chasing
+    public float patrolSpeed = 2f;  // Speed while patrolling
+    public Transform target;        // Drag-and-drop GameObject reference for the target (e.g., Gawe)
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -34,7 +35,7 @@ public class Dragon : MonoBehaviour
 
         if (isChasing)
         {
-            ChaseGawe();
+            ChaseTarget();
         }
         else
         {
@@ -58,8 +59,8 @@ public class Dragon : MonoBehaviour
         if (patrolPoints.Length == 0)
             return;
 
-        Transform target = patrolPoints[currentPatrolIndex];
-        if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        Transform patrolTarget = patrolPoints[currentPatrolIndex];
+        if (NavMesh.SamplePosition(patrolTarget.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
         }
@@ -71,32 +72,33 @@ public class Dragon : MonoBehaviour
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
-    private void ChaseGawe()
+    private void ChaseTarget()
     {
-        GameObject gawe = GameObject.FindGameObjectWithTag("Player");
-        if (gawe != null && agent.isOnNavMesh)
+        if (target != null && agent.isOnNavMesh)
         {
-            agent.SetDestination(gawe.transform.position);
+            agent.SetDestination(target.position); // Move towards the assigned target
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // Check if the detected object matches the target
+        if (collision.transform == target)
         {
             isChasing = true;
             agent.speed = chaseSpeed;
-            Debug.Log("Gawe detected by the dragon!");
+            Debug.Log("Target detected by the dragon!");
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // Stop chasing if the target exits the detection area
+        if (collision.transform == target)
         {
             isChasing = false;
             agent.speed = patrolSpeed;
-            Debug.Log("Gawe escaped from the dragon!");
+            Debug.Log("Target escaped from the dragon!");
         }
     }
 }
