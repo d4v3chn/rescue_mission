@@ -10,7 +10,6 @@ public class Dragon : MonoBehaviour
     public float originalRadius = 5f;
     public float increasedRadius = 8f;
 
-    public GameManager GM;
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -40,7 +39,7 @@ public class Dragon : MonoBehaviour
         detectionCollider.radius = originalRadius;
     }
 
-    void Start()
+    private void Start()
     {
         if (agent == null || !agent.isOnNavMesh)
         {
@@ -134,7 +133,7 @@ public class Dragon : MonoBehaviour
 
             Debug.Log("Gawe detected! Dragon is now chasing.");
         }
-        
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -152,25 +151,11 @@ public class Dragon : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    /*private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"Collision detected with {collision.gameObject.name}");
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Gawe caught by the dragon!");
-
-            if (GM != null)
-            {
-                Debug.Log("Calling GameManager to handle Death()");
-                GM.Death();
-            }
-            else
-            {
-                Debug.LogError("GameManager reference is missing in Dragon script. Ensure it is assigned in the Inspector or initialized in Start.");
-            }
-        }
-    }
+        
+    }*/
     
 
 
