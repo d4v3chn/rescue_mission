@@ -7,19 +7,20 @@ public class GameManager : MonoBehaviour
 {
     public Gawe gawe;
     public Dragon[] dragons;
-    public CatBehaviour cat; 
+    public CatBehaviour cat;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI gameOverText;
     public int score;
     public int lives;
 
-    void Start () {
+    void Start()
+    {
         lives = 0;
         score = 0;
         gameOverText = GameObject.Find("GameOverText")?.GetComponent<TextMeshProUGUI>();
         gameOverText.gameObject.SetActive(false);
-	}
+    }
 
     private void Awake()
     {
@@ -34,8 +35,6 @@ public class GameManager : MonoBehaviour
             enabled = false;
             return;
         }
-
-        //NewGame();
     }
 
     private void Update()
@@ -64,11 +63,9 @@ public class GameManager : MonoBehaviour
         foreach (var dragon in dragons)
         {
             dragon.transform.position = GetRandomPosition();
-            dragon.enabled = false;
+            dragon.enabled = true;
         }
-        dragons[0].enabled = true;
     }
-
     public void Death()
     {
         Debug.Log("Resetting entities...");
@@ -103,15 +100,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void plusOne(){
-        SetScore(score + 1);
-        if(dragons.Last().enabled == false){
-            for(int i = 0; i < score;i++){
-                dragons[i].enabled = true;
-            }
-        }
-    }
-
     public void SetScore(int newScore)
     {
         score = newScore;
@@ -126,7 +114,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2 GetRandomPosition()
     {
-        
+
         return new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
     }
 }

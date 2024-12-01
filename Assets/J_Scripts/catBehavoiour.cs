@@ -1,5 +1,4 @@
-
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,13 +10,13 @@ public class CatBehaviour : MonoBehaviour
     private enum CatState { Patrolling, RunningAway, Caught }
     private CatState currentState;
 
-    public GameManager GM;  
+    public GameManager GM;
     /*To randomly select a startpoint*/
     private float gridSizeX = 1f; // Width of a grid square
     private float gridSizeY = 1f; // Height of a grid square
     private int gridWidth = 22; // Width of the grid (22 squares)
     private int gridHeight = 22; // Height of the grid (22 squares)
-   
+
     /*The agent = the cat*/
     NavMeshAgent agent;
     [SerializeField] float runSpeed = 10f; // Distance at which the cat switches to patrol mode
@@ -54,25 +53,26 @@ public class CatBehaviour : MonoBehaviour
     private void Update()
     {
         switch (currentState)
-                {
-                    case CatState.Patrolling:
-                        agent.speed = patrolSpeed;
-                        Patrol();
-                        CheckPlayerDistance();
-                        break;
+        {
+            case CatState.Patrolling:
+                agent.speed = patrolSpeed;
+                Patrol();
+                CheckPlayerDistance();
+                break;
 
-                    case CatState.RunningAway:
-                        agent.speed = runSpeed;
-                        RunAwayFromPlayer();
-                        CheckPlayerDistance();
-                        break;
+            case CatState.RunningAway:
+                agent.speed = runSpeed;
+                RunAwayFromPlayer();
+                CheckPlayerDistance();
+                break;
 
-                    case CatState.Caught:
-                    Debug.Log("Cat caught!");
-                        // No movement or behavior; the cat is "caught."
-                        GM.plusOne();
-                        break;
-                }
+            case CatState.Caught:
+                Debug.Log("Cat caught!");
+                // No movement or behavior; the cat is "caught."
+                GM.SetScore(GM.score + 1);
+                GM.ResetEntities();
+                break;
+        }
     }
 
     private void CheckPlayerDistance()
@@ -89,7 +89,7 @@ public class CatBehaviour : MonoBehaviour
         }
     }
 
-      // Trigger collision detection
+    // Trigger collision detection
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && currentState != CatState.Caught) // Check if the player caught the cat
@@ -106,7 +106,7 @@ public class CatBehaviour : MonoBehaviour
     }
 
     /*Function to decide where the cat sould spawn*/
-     void SetRandomStartPosition()
+    void SetRandomStartPosition()
     {
         Vector3 randomPosition = Vector3.zero;
         bool validPosition = false;
