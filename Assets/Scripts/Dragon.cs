@@ -7,8 +7,8 @@ public class Dragon : MonoBehaviour
     public Transform gawe;
     public float chaseSpeed = 5f; 
     public float patrolSpeed = 2f;
-    public float originalRadius = 5f;
-    public float increasedRadius = 8f;
+    public float originalRadius = 3.5f;
+    public float increasedRadius = 5f;
 
 
     private NavMeshAgent agent;
