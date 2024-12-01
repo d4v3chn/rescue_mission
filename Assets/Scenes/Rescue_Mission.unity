@@ -3566,7 +3566,6 @@ MonoBehaviour:
   - {fileID: 762397604}
   chaseSpeed: 4
   patrolSpeed: 2
-  target: {fileID: 2042126196}
 --- !u!50 &872458885
 Rigidbody2D:
   serializedVersion: 4
@@ -3594,6 +3593,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &872458888
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872458882}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.5}
+  serializedVersion: 2
+  m_Radius: 5
 --- !u!1 &933640313
 GameObject:
   m_ObjectHideFlags: 0
@@ -8529,6 +8563,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7016011458821608053, guid: 372d6ef603e4cb448b81c96055c05780, type: 3}
       insertIndex: -1
       addedObject: {fileID: 872458883}
+    - targetCorrespondingSourceObject: {fileID: 7016011458821608053, guid: 372d6ef603e4cb448b81c96055c05780, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 872458888}
   m_SourcePrefab: {fileID: 100100000, guid: 372d6ef603e4cb448b81c96055c05780, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
