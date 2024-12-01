@@ -20,20 +20,20 @@ public class CatBehaviour : MonoBehaviour
    
     /*The agent = the cat*/
     NavMeshAgent agent;
+    [SerializeField] float runSpeed = 10f; // Distance at which the cat switches to patrol mode
+    [SerializeField] float patrolSpeed = 10f; // Distance at which the cat switches to patrol mode
+
 
     /*The chaser = the player*/
     [SerializeField] Transform chaser; // Player transform
     [SerializeField] float runDistance = 5f; // Distance to move away from the player
     [SerializeField] float safeDistance = 10f; // Distance at which the cat switches to patrol mode
-    //[SerializeField] private float moveSpeed = 5f;
-    //[SerializeField] private Transform movePoint;
-    //[SerializeField] List<Transform> patrolPoints; // Points for patrolling
-    //private int currentPatrolIndex = 0;
 
     /*Variables important for the patrol state */
     private float patrolTime = 0.5f; // Time to move in one direction
     private float timeInCurrentDirection = 0f; // Timer for how long we've been moving in the current direction
     private Vector3 lastDirection; // The direction the cat is moving in (for reversal)
+
 
     void Start()
     {
@@ -56,11 +56,13 @@ public class CatBehaviour : MonoBehaviour
         switch (currentState)
                 {
                     case CatState.Patrolling:
+                        agent.speed = patrolSpeed;
                         Patrol();
                         CheckPlayerDistance();
                         break;
 
                     case CatState.RunningAway:
+                        agent.speed = runSpeed;
                         RunAwayFromPlayer();
                         CheckPlayerDistance();
                         break;
@@ -105,9 +107,6 @@ public class CatBehaviour : MonoBehaviour
         SetRandomStartPosition(); // Randomly place the cat
     }
 
-
-    /*Things below this should work*/
-
     /*Function to decide where the cat sould spawn*/
      void SetRandomStartPosition()
     {
@@ -143,7 +142,7 @@ public class CatBehaviour : MonoBehaviour
 
     private void Patrol()
     {
-                // If we're moving in a direction, increment the timer
+        // If we're moving in a direction, increment the timer
         timeInCurrentDirection += Time.deltaTime;
 
         // If we've been moving in this direction for the specified time, reverse direction
