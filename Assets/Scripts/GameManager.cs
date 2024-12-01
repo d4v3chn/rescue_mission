@@ -14,12 +14,18 @@ public class GameManager : MonoBehaviour
     public int score;
     public int lives;
 
+    void Start () {
+        lives = 0;
+        score = 0;
+        gameOverText = GameObject.Find("GameOverText")?.GetComponent<TextMeshProUGUI>();
+        gameOverText.gameObject.SetActive(false);
+	}
+
     private void Awake()
     {
 
         scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
         livesText = GameObject.Find("LivesText")?.GetComponent<TextMeshProUGUI>();
-        gameOverText = GameObject.Find("GameOverText")?.GetComponent<TextMeshProUGUI>();
 
 
         if (scoreText == null || livesText == null || gameOverText == null)
@@ -29,7 +35,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        NewGame();
+        //NewGame();
     }
 
     private void Update()
@@ -40,7 +46,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void NewGame()
+    public void NewGame()
     {
         SetScore(0);
         SetLives(3);
