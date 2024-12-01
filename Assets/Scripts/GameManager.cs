@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public Gawe gawe;
     public Dragon[] dragons;
+    public CatBehaviour cat; 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI gameOverText;
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
 
         //gawe.ResetState();
 
+        cat.Respawn();
 
         foreach (var dragon in dragons)
         {
