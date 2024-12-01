@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
     private void ResetEntities()
     {
 
-        gawe.ResetState();
+        //gawe.ResetState();
 
 
         foreach (var dragon in dragons)
