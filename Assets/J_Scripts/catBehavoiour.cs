@@ -103,7 +103,6 @@ public class CatBehaviour : MonoBehaviour
     {
         currentState = CatState.Patrolling; // Reset to patrolling
         SetRandomStartPosition(); // Randomly place the cat
-        gameObject.SetActive(true); // Make the cat visible again
     }
 
 
