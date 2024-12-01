@@ -52,6 +52,28 @@ public class Dragon : MonoBehaviour
         GotoNextPatrolPoint();
     }
 
+    /*void Start()
+    {
+        if (GM != null)
+        {
+            Debug.Log("Testing GM.Death() in Start()");
+            GM.Death(); // Test the Death function
+        }
+        else
+        {
+            Debug.LogError("GameManager reference is missing in Start()");
+        }
+
+        if (agent == null || !agent.isOnNavMesh)
+        {
+            Debug.LogError("NavMeshAgent is not on a NavMesh or is missing.");
+            return;
+        }
+
+        agent.speed = patrolSpeed;
+        GotoNextPatrolPoint();
+    }*/
+
     void Update()
     {
         if (agent == null || !agent.isOnNavMesh)
@@ -102,6 +124,7 @@ public class Dragon : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.transform == gawe)
         {
             isChasing = true;
@@ -111,6 +134,7 @@ public class Dragon : MonoBehaviour
 
             Debug.Log("Gawe detected! Dragon is now chasing.");
         }
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -130,20 +154,25 @@ public class Dragon : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform == gawe)
+        Debug.Log($"Collision detected with {collision.gameObject.name}");
+
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Gawe caught by the dragon!");
 
             if (GM != null)
             {
+                Debug.Log("Calling GameManager to handle Death()");
                 GM.Death();
             }
             else
             {
-                Debug.LogError("GameManager reference is missing in Dragon script.");
+                Debug.LogError("GameManager reference is missing in Dragon script. Ensure it is assigned in the Inspector or initialized in Start.");
             }
         }
     }
+    
+
 
     private void ResumePatrol()
     {

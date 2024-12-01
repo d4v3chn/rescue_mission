@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
 
     public void Death()
     {
+        Debug.Log("Resetting entities...");
+
         SetLives(lives - 1);
 
         if (lives <= 0)

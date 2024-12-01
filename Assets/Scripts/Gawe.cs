@@ -11,7 +11,7 @@ public class Gawe : MonoBehaviour
     private Vector2 movement;
     private bool isFacingRight = true;
 
-        void Start()
+    void Start()
     {
         ResetState();
     }
