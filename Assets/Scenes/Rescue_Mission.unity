@@ -3090,7 +3090,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gawe: {fileID: 2042126201}
-  dragons: []
+  dragons:
+  - {fileID: 872458884}
+  cat: {fileID: 1199855182}
   scoreText: {fileID: 706127624}
   livesText: {fileID: 1588650812}
   gameOverText: {fileID: 69595825}
@@ -3898,7 +3900,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -678, y: 428}
+  m_AnchoredPosition: {x: -984, y: 591}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &706127624
@@ -4068,12 +4070,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b7fdea77f780b4a95c46294c97b9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolPoints:
-  - {fileID: 1092539819}
-  - {fileID: 546324178}
-  - {fileID: 762397604}
-  chaseSpeed: 4
+  patrolPoints: []
+  gawe: {fileID: 0}
+  chaseSpeed: 5
   patrolSpeed: 2
+  originalRadius: 5
+  increasedRadius: 8
 --- !u!50 &872458885
 Rigidbody2D:
   serializedVersion: 4
@@ -4135,7 +4137,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.5}
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 7
 --- !u!1 &933640313
 GameObject:
   m_ObjectHideFlags: 0
@@ -8796,7 +8798,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -678, y: 309}
+  m_AnchoredPosition: {x: -978, y: 484}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1588650812
