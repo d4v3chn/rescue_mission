@@ -4039,6 +4039,7 @@ MonoBehaviour:
   patrolSpeed: 2
   originalRadius: 5
   increasedRadius: 8
+  GM: {fileID: 178369821}
 --- !u!50 &872458885
 Rigidbody2D:
   serializedVersion: 4
@@ -8322,11 +8323,11 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.033333335
+  m_VoxelSize: 0.06666667
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 6db956cb8a5b0fe419b4b95e4a5a3e5a, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: ff0b7e989599a604090740cdb50c7a48, type: 2}
 --- !u!4 &937225873
 Transform:
   m_ObjectHideFlags: 0
