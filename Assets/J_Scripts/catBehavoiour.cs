@@ -70,9 +70,7 @@ public class CatBehaviour : MonoBehaviour
                     case CatState.Caught:
                     Debug.Log("Cat caught!");
                         // No movement or behavior; the cat is "caught."
-                        GM.SetScore(GM.score + 1);
-                        Debug.Log(GM.score);
-                        GM.ResetEntities();
+                        GM.plusOne();
                         break;
                 }
     }

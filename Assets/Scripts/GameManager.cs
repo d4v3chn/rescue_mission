@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,6 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI gameOverText;
-
     public int score;
     public int lives;
 
@@ -64,8 +64,9 @@ public class GameManager : MonoBehaviour
         foreach (var dragon in dragons)
         {
             dragon.transform.position = GetRandomPosition();
-            dragon.enabled = true;
+            dragon.enabled = false;
         }
+        dragons[0].enabled = true;
     }
 
     public void Death()
@@ -99,6 +100,15 @@ public class GameManager : MonoBehaviour
         foreach (var dragon in dragons)
         {
             dragon.enabled = false;
+        }
+    }
+
+    public void plusOne(){
+        SetScore(score + 1);
+        if(dragons.Last().enabled == false){
+            for(int i = 0; i < score;i++){
+                dragons[i].enabled = true;
+            }
         }
     }
 
