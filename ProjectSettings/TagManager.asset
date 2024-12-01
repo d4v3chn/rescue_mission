@@ -8,6 +8,7 @@ TagManager:
   - Walls
   - Cat
   - Tunnel
+  - CatchGawe
   layers:
   - Default
   - TransparentFX
