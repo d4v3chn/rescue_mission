@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public Gawe gawe;
-    //public Dragon[] dragons;
+    public Dragon[] dragons;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI gameOverText;
@@ -50,14 +50,14 @@ public class GameManager : MonoBehaviour
     private void ResetEntities()
     {
 
-        //gawe.ResetState();
+        gawe.ResetState();
 
 
-        /*foreach (var dragon in dragons)
+        foreach (var dragon in dragons)
         {
             dragon.transform.position = GetRandomPosition();
             dragon.enabled = true;
-        }*/
+        }
     }
 
     public void Death()
@@ -85,10 +85,10 @@ public class GameManager : MonoBehaviour
     private void StopGameplay()
     {
         gawe.enabled = false;
-        /*foreach (var dragon in dragons)
+        foreach (var dragon in dragons)
         {
             dragon.enabled = false;
-        }*/
+        }
     }
 
     private void SetScore(int newScore)
