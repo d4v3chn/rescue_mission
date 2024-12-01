@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     private void ResetEntities()
     {
 
-        //gawe.ResetState();
+        gawe.ResetState();
 
         cat.Respawn();
 

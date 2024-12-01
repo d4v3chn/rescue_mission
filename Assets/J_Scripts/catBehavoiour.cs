@@ -32,9 +32,6 @@ public class CatBehaviour : MonoBehaviour
     private float timeInCurrentDirection = 0f; // Timer for how long we've been moving in the current direction
     private Vector3 lastDirection; // The direction the cat is moving in (for reversal)
 
-    private bool isCaught = false; // Track if the cat has been caught
-
-
     void Start()
     {
         // Start at a random position

@@ -3090,7 +3090,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gawe: {fileID: 2042126201}
-  dragons: []
+  dragons:
+  - {fileID: 872458884}
+  cat: {fileID: 1199855182}
   scoreText: {fileID: 706127624}
   livesText: {fileID: 1588650812}
   gameOverText: {fileID: 69595825}
@@ -4068,12 +4070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b7fdea77f780b4a95c46294c97b9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolPoints:
-  - {fileID: 1092539819}
-  - {fileID: 546324178}
-  - {fileID: 762397604}
-  chaseSpeed: 4
-  patrolSpeed: 2
+  target: {fileID: 2042126196}
 --- !u!50 &872458885
 Rigidbody2D:
   serializedVersion: 4
