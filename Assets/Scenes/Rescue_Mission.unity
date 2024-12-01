@@ -8417,6 +8417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8334c9a40c0e245849a6b626d52ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GM: {fileID: 178369821}
   chaser: {fileID: 2042126196}
   runDistance: 5
   safeDistance: 10

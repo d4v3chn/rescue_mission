@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         gameOverText.gameObject.SetActive(false);
     }
 
-    private void ResetEntities()
+    public void ResetEntities()
     {
 
         gawe.ResetState();
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetScore(int newScore)
+    public void SetScore(int newScore)
     {
         score = newScore;
         scoreText.text = $"Score: {score}";

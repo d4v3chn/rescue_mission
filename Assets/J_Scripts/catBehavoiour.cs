@@ -2,13 +2,16 @@
  using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI; // For NavMesh functionality
+using UnityEngine.AI;
+using UnityEngine.SocialPlatforms.Impl; // For NavMesh functionality
 
 public class CatBehaviour : MonoBehaviour
 {
     /* Cat AI States */
     private enum CatState { Patrolling, RunningAway, Caught }
     private CatState currentState;
+
+    public GameManager GM;  
     /*To randomly select a startpoint*/
     private float gridSizeX = 1f; // Width of a grid square
     private float gridSizeY = 1f; // Height of a grid square
@@ -63,7 +66,11 @@ public class CatBehaviour : MonoBehaviour
                         break;
 
                     case CatState.Caught:
+                    Debug.Log("Cat caught!");
                         // No movement or behavior; the cat is "caught."
+                        GM.SetScore(GM.score + 1);
+                        Debug.Log(GM.score);
+                        GM.ResetEntities();
                         break;
                 }
     }
@@ -88,7 +95,6 @@ public class CatBehaviour : MonoBehaviour
         if (collision.CompareTag("Player") && currentState != CatState.Caught) // Check if the player caught the cat
         {
             currentState = CatState.Caught;
-            gameObject.SetActive(false); // Make the cat disappear
         }
     }
 
@@ -101,7 +107,7 @@ public class CatBehaviour : MonoBehaviour
     }
 
 
-    /*Things below this should woirk*/
+    /*Things below this should work*/
 
     /*Function to decide where the cat sould spawn*/
      void SetRandomStartPosition()
