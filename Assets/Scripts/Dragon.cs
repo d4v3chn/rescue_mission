@@ -3,10 +3,9 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-    public Transform[] patrolPoints; // Array of patrol points for patrolling
-    public float chaseSpeed = 4f;    // Speed while chasing
-    public float patrolSpeed = 2f;  // Speed while patrolling
-    public Transform target;        // Drag-and-drop GameObject reference for the target (e.g., Gawe)
+    public Transform[] patrolPoints; // Array of patrol points for idle movement
+    public float chaseSpeed = 5f; // Speed when chasing Gawe
+    public float patrolSpeed = 2f; // Speed during patrol
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -22,7 +21,7 @@ public class Dragon : MonoBehaviour
             return;
         }
 
-        agent.speed = patrolSpeed;
+        agent.speed = patrolSpeed; // Start with patrol speed
         GotoNextPatrolPoint();
     }
 
@@ -30,12 +29,12 @@ public class Dragon : MonoBehaviour
     {
         if (!agent.isOnNavMesh)
         {
-            return;
+            return; // Skip Update if the agent is not on the NavMesh
         }
 
         if (isChasing)
         {
-            ChaseTarget();
+            ChaseGawe();
         }
         else
         {
@@ -48,6 +47,7 @@ public class Dragon : MonoBehaviour
         if (!agent.isOnNavMesh || agent.pathPending)
             return;
 
+        // If the dragon has reached its patrol point, go to the next one
         if (agent.remainingDistance < 0.5f)
         {
             GotoNextPatrolPoint();
@@ -59,8 +59,9 @@ public class Dragon : MonoBehaviour
         if (patrolPoints.Length == 0)
             return;
 
-        Transform patrolTarget = patrolPoints[currentPatrolIndex];
-        if (NavMesh.SamplePosition(patrolTarget.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        // Ensure patrol point is on NavMesh
+        Transform target = patrolPoints[currentPatrolIndex];
+        if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
         }
@@ -72,33 +73,35 @@ public class Dragon : MonoBehaviour
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
-    private void ChaseTarget()
+    private void ChaseGawe()
     {
-        if (target != null && agent.isOnNavMesh)
+        // If chasing, move toward Gawe's position
+        GameObject gawe = GameObject.FindGameObjectWithTag("Player");
+        if (gawe != null && agent.isOnNavMesh)
         {
-            agent.SetDestination(target.position); // Move towards the assigned target
+            agent.SetDestination(gawe.transform.position);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if the detected object matches the target
-        if (collision.transform == target)
+        // Start chasing Gawe if detected
+        if (collision.CompareTag("Player"))
         {
             isChasing = true;
             agent.speed = chaseSpeed;
-            Debug.Log("Target detected by the dragon!");
+            Debug.Log("Gawe detected by the dragon!");
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Stop chasing if the target exits the detection area
-        if (collision.transform == target)
+        // Stop chasing when Gawe is out of detection range
+        if (collision.CompareTag("Player"))
         {
             isChasing = false;
             agent.speed = patrolSpeed;
-            Debug.Log("Target escaped from the dragon!");
+            Debug.Log("Gawe escaped from the dragon!");
         }
     }
 }
