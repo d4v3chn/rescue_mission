@@ -11,6 +11,11 @@ public class Gawe : MonoBehaviour
     private Vector2 movement;
     private bool isFacingRight = true;
 
+        void Start()
+    {
+        ResetState();
+    }
+
     private void Awake()
     {
         currentSpeed = normalSpeed;
@@ -66,5 +71,9 @@ public class Gawe : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1; 
         transform.localScale = scale;
+    }
+
+    public void ResetState(){
+        rb.position = new Vector3(0.5f, -10.59f, 0f);
     }
 }
