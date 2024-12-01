@@ -7,8 +7,8 @@ public class Dragon : MonoBehaviour
     public Transform gawe;           // Reference to Gawe (drag and drop in Inspector)
     public float chaseSpeed = 5f;    // Speed when chasing Gawe
     public float patrolSpeed = 2f;   // Speed during patrol
-    public float originalRadius = 8f; // Original detection radius
-    public float increasedRadius = 10f; // Increased radius when chasing
+    public float originalRadius = 5f; // Original detection radius
+    public float increasedRadius = 8f; // Increased radius when chasing
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -72,10 +72,11 @@ public class Dragon : MonoBehaviour
 
     private void Patrol()
     {
+        // Check if agent is idle and not heading to a patrol point
         if (agent.pathPending || agent.remainingDistance > 0.5f)
             return;
 
-        // Move to the next patrol point
+        // Go to the next patrol point
         GotoNextPatrolPoint();
     }
 
@@ -129,10 +130,16 @@ public class Dragon : MonoBehaviour
             // Reset the detection radius
             detectionCollider.radius = originalRadius;
 
-            // Resume patrolling
-            GotoNextPatrolPoint();
+            // Restart patrolling
+            ResumePatrol();
 
             Debug.Log("Gawe escaped! Dragon is returning to patrol.");
         }
+    }
+
+    private void ResumePatrol()
+    {
+        // Ensure the dragon moves to the nearest patrol point after chasing ends
+        GotoNextPatrolPoint();
     }
 }
