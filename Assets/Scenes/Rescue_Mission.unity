@@ -8700,7 +8700,7 @@ GameObject:
   - component: {fileID: 1418093544}
   - component: {fileID: 1418093543}
   m_Layer: 0
-  m_Name: Navigation dragon
+  m_Name: NavMesh Surface Dragon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
