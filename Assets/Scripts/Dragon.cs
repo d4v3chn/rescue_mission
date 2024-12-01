@@ -3,12 +3,14 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-    public Transform[] patrolPoints; // Array of patrol points for patrol movement
-    public Transform gawe;           // Reference to Gawe (drag and drop in Inspector)
-    public float chaseSpeed = 5f;    // Speed when chasing Gawe
-    public float patrolSpeed = 2f;   // Speed during patrol
-    public float originalRadius = 5f; // Original detection radius
-    public float increasedRadius = 8f; // Increased radius when chasing
+    public Transform[] patrolPoints; 
+    public Transform gawe;
+    public float chaseSpeed = 5f; 
+    public float patrolSpeed = 2f;
+    public float originalRadius = 5f;
+    public float increasedRadius = 8f;
+
+    public GameManager GM;
 
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
@@ -17,7 +19,6 @@ public class Dragon : MonoBehaviour
 
     private void Awake()
     {
-        // Initialize the NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
 
         if (agent == null)
@@ -26,11 +27,9 @@ public class Dragon : MonoBehaviour
             return;
         }
 
-        // Set NavMeshAgent properties for 2D alignment
         agent.updateRotation = false;
         agent.updateUpAxis = false;
 
-        // Initialize the CircleCollider2D
         detectionCollider = GetComponent<CircleCollider2D>();
         if (detectionCollider == null)
         {
@@ -38,7 +37,6 @@ public class Dragon : MonoBehaviour
             return;
         }
 
-        // Set the initial radius
         detectionCollider.radius = originalRadius;
     }
 
@@ -50,7 +48,6 @@ public class Dragon : MonoBehaviour
             return;
         }
 
-        // Set initial patrol speed and start patrolling
         agent.speed = patrolSpeed;
         GotoNextPatrolPoint();
     }
@@ -72,11 +69,9 @@ public class Dragon : MonoBehaviour
 
     private void Patrol()
     {
-        // Check if agent is idle and not heading to a patrol point
         if (agent.pathPending || agent.remainingDistance > 0.5f)
             return;
 
-        // Go to the next patrol point
         GotoNextPatrolPoint();
     }
 
@@ -102,7 +97,6 @@ public class Dragon : MonoBehaviour
     {
         if (gawe == null) return;
 
-        // Set the destination to Gawe's position
         agent.SetDestination(gawe.position);
     }
 
@@ -113,7 +107,6 @@ public class Dragon : MonoBehaviour
             isChasing = true;
             agent.speed = chaseSpeed;
 
-            // Increase the detection radius
             detectionCollider.radius = increasedRadius;
 
             Debug.Log("Gawe detected! Dragon is now chasing.");
@@ -127,19 +120,33 @@ public class Dragon : MonoBehaviour
             isChasing = false;
             agent.speed = patrolSpeed;
 
-            // Reset the detection radius
             detectionCollider.radius = originalRadius;
 
-            // Restart patrolling
             ResumePatrol();
 
             Debug.Log("Gawe escaped! Dragon is returning to patrol.");
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform == gawe)
+        {
+            Debug.Log("Gawe caught by the dragon!");
+
+            if (GM != null)
+            {
+                GM.Death();
+            }
+            else
+            {
+                Debug.LogError("GameManager reference is missing in Dragon script.");
+            }
+        }
+    }
+
     private void ResumePatrol()
     {
-        // Ensure the dragon moves to the nearest patrol point after chasing ends
         GotoNextPatrolPoint();
     }
 }
