@@ -120,7 +120,7 @@ public class CatBehaviour : MonoBehaviour
             float randomY = Random.Range(0, gridHeight); // Random Y coordinate (between 0 and gridHeight-1)
 
             // Calculate the center of the random grid square (0.5 offset to center in the square)
-            randomPosition = new Vector3(randomX * gridSizeX + 0.5f, randomY * gridSizeY + 0.5f, 0f);
+            randomPosition = new Vector3(randomX * gridSizeX - 0.5f, randomY * gridSizeY + 0.2f, 0f);
 
             // Check if the chosen position is valid (not on a wall) using NavMesh
             NavMeshHit hit;
@@ -131,7 +131,7 @@ public class CatBehaviour : MonoBehaviour
         transform.position = randomPosition;
     }
 
-        private void RunAwayFromPlayer()
+    private void RunAwayFromPlayer()
     {
         Vector3 awayDirection = (transform.position - chaser.position).normalized;
         Vector3 runToPosition = transform.position + awayDirection * runDistance;
