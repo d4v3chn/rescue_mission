@@ -16,6 +16,8 @@ public class Dragon : MonoBehaviour
     private bool isChasing = false;
     private CircleCollider2D detectionCollider;
 
+
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -51,27 +53,6 @@ public class Dragon : MonoBehaviour
         GotoNextPatrolPoint();
     }
 
-    /*void Start()
-    {
-        if (GM != null)
-        {
-            Debug.Log("Testing GM.Death() in Start()");
-            GM.Death(); // Test the Death function
-        }
-        else
-        {
-            Debug.LogError("GameManager reference is missing in Start()");
-        }
-
-        if (agent == null || !agent.isOnNavMesh)
-        {
-            Debug.LogError("NavMeshAgent is not on a NavMesh or is missing.");
-            return;
-        }
-
-        agent.speed = patrolSpeed;
-        GotoNextPatrolPoint();
-    }*/
 
     void Update()
     {
@@ -86,6 +67,7 @@ public class Dragon : MonoBehaviour
         {
             Patrol();
         }
+
     }
 
     private void Patrol()
@@ -150,14 +132,6 @@ public class Dragon : MonoBehaviour
             Debug.Log("Gawe escaped! Dragon is returning to patrol.");
         }
     }
-
-    /*private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        
-    }*/
-    
-
 
     private void ResumePatrol()
     {

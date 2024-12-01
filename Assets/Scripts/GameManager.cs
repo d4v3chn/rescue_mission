@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
         if (lives <= 0)
         {
             GameOver();
+            SetLives(0);
         }
         else
         {
