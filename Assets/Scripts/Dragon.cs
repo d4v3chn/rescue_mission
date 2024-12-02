@@ -3,14 +3,15 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-    public Transform[] patrolPoints; 
+    // Public variables - mostly to be modified directly from Unity
+    public Transform[] patrolPoints;
     public Transform gawe;
-    public float chaseSpeed = 5f; 
+    public float chaseSpeed = 5f;
     public float patrolSpeed = 2f;
     public float originalRadius = 3.5f;
     public float increasedRadius = 5f;
 
-
+    // Private variables for agent, patrol points and chase methods
     private NavMeshAgent agent;
     private int currentPatrolIndex = 0;
     private bool isChasing = false;
@@ -19,13 +20,13 @@ public class Dragon : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-
         if (agent == null)
         {
             Debug.LogError("NavMeshAgent component is missing on the Dragon GameObject.");
             return;
         }
 
+        // Make the agent appear
         agent.updateRotation = false;
         agent.updateUpAxis = false;
 
@@ -35,7 +36,6 @@ public class Dragon : MonoBehaviour
             Debug.LogError("CircleCollider2D is missing on the Dragon GameObject.");
             return;
         }
-
         detectionCollider.radius = originalRadius;
     }
 
@@ -46,38 +46,16 @@ public class Dragon : MonoBehaviour
             Debug.LogError("NavMeshAgent is not on a NavMesh or is missing.");
             return;
         }
-
         agent.speed = patrolSpeed;
         GotoNextPatrolPoint();
     }
 
-    /*void Start()
-    {
-        if (GM != null)
-        {
-            Debug.Log("Testing GM.Death() in Start()");
-            GM.Death(); // Test the Death function
-        }
-        else
-        {
-            Debug.LogError("GameManager reference is missing in Start()");
-        }
-
-        if (agent == null || !agent.isOnNavMesh)
-        {
-            Debug.LogError("NavMeshAgent is not on a NavMesh or is missing.");
-            return;
-        }
-
-        agent.speed = patrolSpeed;
-        GotoNextPatrolPoint();
-    }*/
-
     void Update()
     {
         if (agent == null || !agent.isOnNavMesh)
+        {
             return;
-
+        }
         if (isChasing)
         {
             ChaseGawe();
@@ -91,7 +69,9 @@ public class Dragon : MonoBehaviour
     private void Patrol()
     {
         if (agent.pathPending || agent.remainingDistance > 0.5f)
+        {
             return;
+        }
 
         GotoNextPatrolPoint();
     }
@@ -100,7 +80,7 @@ public class Dragon : MonoBehaviour
     {
         if (patrolPoints.Length == 0) return;
 
-        Transform target = patrolPoints[currentPatrolIndex];
+        Transform target = patrolPoints[currentPatrolIndex]; // PatrolPoints sequence
         NavMeshHit hit;
         if (NavMesh.SamplePosition(target.position, out hit, 1.0f, NavMesh.AllAreas))
         {
@@ -114,16 +94,9 @@ public class Dragon : MonoBehaviour
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
-    private void ChaseGawe()
-    {
-        if (gawe == null) return;
-
-        agent.SetDestination(gawe.position);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+
         if (collision.transform == gawe)
         {
             isChasing = true;
@@ -151,12 +124,15 @@ public class Dragon : MonoBehaviour
         }
     }
 
-    /*private void OnCollisionEnter2D(Collision2D collision)
+    private void ChaseGawe()
     {
+        if (gawe == null)
+        {
+            return;
+        }
 
-        
-    }*/
-    
+        agent.SetDestination(gawe.position);
+    }
 
 
     private void ResumePatrol()
@@ -164,3 +140,4 @@ public class Dragon : MonoBehaviour
         GotoNextPatrolPoint();
     }
 }
+

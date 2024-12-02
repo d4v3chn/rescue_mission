@@ -4,15 +4,12 @@ public class Gawe : MonoBehaviour
 {
     public float normalSpeed = 5f;
     public float tunnelSpeed = 2f;
-
-    private float currentSpeed;
-    public Rigidbody2D rb; 
-
-    private Vector2 movement;
-    private bool isFacingRight = true;
-
+    public Rigidbody2D rb;
     public GameManager GM;
 
+    private float currentSpeed;
+    private Vector2 movement;
+    private bool isFacingRight = true;
 
     void Start()
     {
@@ -26,11 +23,8 @@ public class Gawe : MonoBehaviour
 
     void Update()
     {
-
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-
-
         if (movement.x < 0 && !isFacingRight)
         {
             Flip(); 
@@ -54,19 +48,14 @@ public class Gawe : MonoBehaviour
 
             Debug.Log("Gawe entered the tunnel, the speed reduced...");
         }
-
+        // Dragon catches Gawe and the game resets
         if (collision.CompareTag("CatchGawe"))
         {
             Debug.Log("Gawe caught by the dragon!");
 
             if (GM != null)
             {
-                Debug.Log("Calling GameManager to handle Death()");
                 GM.Death();
-            }
-            else
-            {
-                Debug.LogError("GameManager reference is missing in Dragon script. Ensure it is assigned in the Inspector or initialized in Start.");
             }
         }
     }
