@@ -58,12 +58,14 @@ public class CatBehaviour : MonoBehaviour
                 agent.speed = patrolSpeed;
                 Patrol();
                 CheckPlayerDistance();
+                LockRotation();
                 break;
 
             case CatState.RunningAway:
                 agent.speed = runSpeed;
                 RunAwayFromPlayer();
                 CheckPlayerDistance();
+                LockRotation();
                 break;
 
             case CatState.Caught:
@@ -115,8 +117,8 @@ public class CatBehaviour : MonoBehaviour
         while (!validPosition)
         {
             // Randomly select a grid cell within the grid limits
-            float randomX = Random.Range(0, gridWidth);  // Random X coordinate (between 0 and gridWidth-1)
-            float randomY = Random.Range(0, gridHeight); // Random Y coordinate (between 0 and gridHeight-1)
+            float randomX = Random.Range(-gridWidth/2, gridWidth/2);  // Random X coordinate (between 0 and gridWidth-1)
+            float randomY = Random.Range(-gridHeight/2, gridHeight/2); // Random Y coordinate (between 0 and gridHeight-1)
 
             // Calculate the center of the random grid square (0.5 offset to center in the square)
             randomPosition = new Vector3(randomX * gridSizeX - 0.5f, randomY * gridSizeY + 0.2f, 0f);
@@ -136,24 +138,24 @@ public class CatBehaviour : MonoBehaviour
         Vector3 runToPosition = transform.position + awayDirection * runDistance;
         runToPosition.z = transform.position.z; // Ensure movement is 2D
         agent.SetDestination(runToPosition);
+        Debug.Log($"Running away to: {runToPosition}");
     }
 
     private void Patrol()
     {
-        // If we're moving in a direction, increment the timer
-        timeInCurrentDirection += Time.deltaTime;
-
-        // If we've been moving in this direction for the specified time, reverse direction
         if (timeInCurrentDirection >= patrolTime)
         {
-            lastDirection = -lastDirection; // Reverse the patrol direction
-            timeInCurrentDirection = 0f; // Reset the timer
+            lastDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
+            timeInCurrentDirection = 0f;
         }
 
-        // Set the agent's destination to move in the current direction for the next patrolTime
+        timeInCurrentDirection += Time.deltaTime;
         agent.SetDestination(transform.position + lastDirection);
-
-        // Optionally, adjust speed or other properties for patrol
-        agent.speed = 0.5f; // Set a slow patrol speed
+        Debug.Log($"Patrolling towards: {agent.destination}");
     }
+    private void LockRotation()
+{
+    // Keep the rotation of the cat locked on the Z-axis (0 rotation)
+    transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+}
 }

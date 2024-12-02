@@ -93,5 +93,6 @@ public class Gawe : MonoBehaviour
 
     public void ResetState(){
         rb.position = new Vector3(0.5f, -10.59f, 0f);
+        enabled = true;
     }
 }
