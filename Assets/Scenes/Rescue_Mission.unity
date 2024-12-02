@@ -4408,10 +4408,10 @@ MonoBehaviour:
   - {fileID: 546324178}
   - {fileID: 762397604}
   gawe: {fileID: 2042126196}
-  chaseSpeed: 3
-  patrolSpeed: 2
-  originalRadius: 3.5
-  increasedRadius: 5
+  chaseSpeed: 5
+  patrolSpeed: 3.5
+  originalRadius: 4
+  increasedRadius: 6
 --- !u!50 &872458885
 Rigidbody2D:
   serializedVersion: 4
@@ -4473,7 +4473,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.5}
   serializedVersion: 2
-  m_Radius: 3.5
+  m_Radius: 6
 --- !u!4 &872458890 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8184721586078255638, guid: 372d6ef603e4cb448b81c96055c05780, type: 3}
@@ -9552,7 +9552,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.5}
   serializedVersion: 2
-  m_Radius: 3.5
+  m_Radius: 6
 --- !u!195 &1695518568
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9592,10 +9592,10 @@ MonoBehaviour:
   - {fileID: 828725804}
   - {fileID: 1963758133}
   gawe: {fileID: 2042126196}
-  chaseSpeed: 3
-  patrolSpeed: 2
-  originalRadius: 3.5
-  increasedRadius: 5
+  chaseSpeed: 5
+  patrolSpeed: 3.5
+  originalRadius: 4
+  increasedRadius: 6
 --- !u!50 &1695518570
 Rigidbody2D:
   serializedVersion: 4
