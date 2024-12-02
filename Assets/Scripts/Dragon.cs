@@ -3,11 +3,10 @@ using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
-
     // Public variables - mostly to be modified directly from Unity
-    public Transform[] patrolPoints; 
+    public Transform[] patrolPoints;
     public Transform gawe;
-    public float chaseSpeed = 5f; 
+    public float chaseSpeed = 5f;
     public float patrolSpeed = 2f;
     public float originalRadius = 3.5f;
     public float increasedRadius = 5f;
@@ -81,7 +80,7 @@ public class Dragon : MonoBehaviour
     {
         if (patrolPoints.Length == 0) return;
 
-        Transform target = patrolPoints[currentPatrolIndex];
+        Transform target = patrolPoints[currentPatrolIndex]; // PatrolPoints sequence
         NavMeshHit hit;
         if (NavMesh.SamplePosition(target.position, out hit, 1.0f, NavMesh.AllAreas))
         {
@@ -127,9 +126,9 @@ public class Dragon : MonoBehaviour
 
     private void ChaseGawe()
     {
-        if (gawe == null) 
-        { 
-            return; 
+        if (gawe == null)
+        {
+            return;
         }
 
         agent.SetDestination(gawe.position);
@@ -141,3 +140,4 @@ public class Dragon : MonoBehaviour
         GotoNextPatrolPoint();
     }
 }
+
